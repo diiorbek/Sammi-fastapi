@@ -1,6 +1,6 @@
 from sqlalchemy import Column , Integer , String, DateTime, Enum, Boolean
 from sqlalchemy.sql import func
-from src.core.base import Base
+from model.base import Base
 import enum
 
 class UserRole(enum.Enum):

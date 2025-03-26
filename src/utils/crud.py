@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import Type, TypeVar, Generic, List , Optional
 from fastapi import HTTPException
-from src.core.base import Base
+from model.base import Base
 
 ModelType = TypeVar("ModelType", bound=Base)
 SchemaType = TypeVar("SchemaType")

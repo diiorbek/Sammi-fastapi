@@ -7,9 +7,9 @@ from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from functools import wraps
-from src.core.config import settings
-from src.model.user import User, UserRole
-from src.core.base import get_db  
+from core.config import app_settings
+from model.user import User, UserRole
+from src.core.session import get_db  
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -28,19 +28,19 @@ async def create_access_token(data: dict, expires_delta: timedelta) -> str:
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
     
-    return await asyncio.to_thread(jwt.encode, to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return await asyncio.to_thread(jwt.encode, to_encode, app_settings.SECRET_KEY, algorithm=app_settings.ALGORITHM)
 
 
 async def create_refresh_token(data: dict, expires_delta: timedelta) -> str:
     to_encode = data.copy()
     expire = datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
-    return await asyncio.to_thread(jwt.encode, to_encode, settings.REFRESH_SECRET_KEY, algorithm=settings.ALGORITHM)
+    return await asyncio.to_thread(jwt.encode, to_encode, app_settings.REFRESH_SECRET_KEY, algorithm=app_settings.ALGORITHM)
 
 
 async def verify_token(token: str, secret_key: str):
     try:
-        payload = await asyncio.to_thread(jwt.decode, token, secret_key, algorithms=[settings.ALGORITHM])
+        payload = await asyncio.to_thread(jwt.decode, token, secret_key, algorithms=[app_settings.ALGORITHM])
         return payload
     except ExpiredSignatureError:
         unverified_payload = jwt.get_unverified_claims(token)
@@ -66,7 +66,7 @@ async def get_current_user(
     token: str = Depends(oauth2_scheme), 
     db: AsyncSession = Depends(get_db)
 ):
-    payload = await verify_token(token, settings.SECRET_KEY)
+    payload = await verify_token(token, app_settings.SECRET_KEY)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
     

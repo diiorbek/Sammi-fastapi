@@ -1,7 +1,7 @@
 from sqlalchemy import Column , String , Integer , Float , ForeignKey , Enum
 from sqlalchemy.dialects.postgresql import JSONB
-from src.core.base import Base
-from enum import Enum
+from model.base import Base
+
 
 class OrderStatus(Enum):
     PENDING = "pending"
