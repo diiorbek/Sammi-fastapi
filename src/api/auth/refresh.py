@@ -1,9 +1,10 @@
+from datetime import timedelta
+
 from fastapi import APIRouter, Depends, Request, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession  
-from src.core.base import get_db  
-from src.utils.auth_util import create_access_token, verify_token, get_user  
-from datetime import timedelta
-from src.core.config import settings
+from core.session import get_db  
+from utils.auth_util import create_access_token, verify_token, get_user  
+from core.config import app_settings
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ async def refresh_token(
             detail="No refresh token provided"
         )
 
-    payload = await verify_token(refresh_token_value, settings.REFRESH_SECRET_KEY)
+    payload = await verify_token(refresh_token_value, app_settings.REFRESH_SECRET_KEY)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,7 +37,7 @@ async def refresh_token(
     
     new_access_token = await create_access_token(
         {"sub": user.username}, 
-        timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        timedelta(minutes=app_settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     
     return {"access_token": new_access_token, "token_type": "bearer"}

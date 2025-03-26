@@ -1,15 +1,7 @@
-from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
 
-load_dotenv()
-
-class Settings(BaseSettings):
-    DB_USER: str 
-    DB_HOST: str 
-    DB_PASSWORD: str 
-    DB_PORT: str 
-    DB_NAME: str 
+class AppSettings(BaseSettings):
     MODE: str
 
     SECRET_KEY: str
@@ -17,19 +9,26 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_DAYS: int
     ALGORITHM: str
-    
+
+
+class PgSettings(BaseSettings):
+    POSTGRES_DRV: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str
+    POSTGRES_PORT: int
+    POSTGRES_DB: str
+
     @property
-    def connection_string(self):
+    def connection_string(self) -> str:
         return (
-            f'postgresql+asyncpg://'
-            f'{self.DB_USER}:'
-            f'{self.DB_PASSWORD}@'
-            f'{self.DB_HOST}:{self.DB_PORT}/'
-            f'{self.DB_NAME}'
+            f'{self.POSTGRES_DRV}://'
+            f'{self.POSTGRES_USER}:'
+            f'{self.POSTGRES_PASSWORD}@'
+            f'{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/'
+            f'{self.POSTGRES_DB}'
         )
 
 
-    class Config:
-        env_file = ".env"
-
-settings = Settings()
+app_settings = AppSettings()
+pg_settings = PgSettings()

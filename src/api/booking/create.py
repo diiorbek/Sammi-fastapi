@@ -1,8 +1,8 @@
 from fastapi import APIRouter , Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.base import get_db
-from src.schemas.booking import BookingCreate
-from src.model.booking import Booking
+from core.session import get_db
+from schemas.booking import BookingCreate
+from model.booking import Booking
 
 booking_router = APIRouter()
 

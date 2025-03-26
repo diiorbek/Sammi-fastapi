@@ -1,6 +1,6 @@
-from sqlalchemy import Column , Integer , String, Float , ARRAY 
+from sqlalchemy import Column , Integer , String, Float 
 from sqlalchemy.dialects.postgresql import JSONB
-from src.core.base import Base
+from model.base import Base
 
 
 class Store(Base):
