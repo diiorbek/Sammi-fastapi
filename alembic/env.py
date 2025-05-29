@@ -1,32 +1,16 @@
-import sys
-from pathlib import Path
-
 import asyncio
 from logging.config import fileConfig
+
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+from src.model.base import Base
 
 from alembic import context
-from dotenv import load_dotenv
-
-load_dotenv()
-
-project_path = Path.cwd() / 'src'
-sys.path.append(str(project_path))
-
-from src.core.config import pg_settings
-from src.model.user import User
-
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
-config.set_main_option(
-    name="sqlalchemy.url",
-    value=pg_settings.connection_string
-)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -37,7 +21,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = User.metadata
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
