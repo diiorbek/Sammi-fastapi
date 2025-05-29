@@ -8,7 +8,9 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+from dotenv import load_dotenv
 
+load_dotenv()
 
 project_path = Path.cwd() / 'src'
 sys.path.append(str(project_path))

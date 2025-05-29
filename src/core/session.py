@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession , create_async_engine, async_sessionmaker
-from core.config import pg_settings
+from src.core.config import pg_settings
 
 engine = create_async_engine(pg_settings.connection_string, echo = True)
 
@@ -11,8 +11,5 @@ SessionLocal = async_sessionmaker(
 )
 
 async def get_db():
-    async with SessionLocal() as a_session:
-        try:
-            yield a_session
-        except:
-            await a_session.rollback()
+    async with SessionLocal() as session:
+        yield session

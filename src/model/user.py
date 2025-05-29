@@ -1,25 +1,12 @@
-from sqlalchemy import Column , Integer , String, DateTime, Enum, Boolean
-from sqlalchemy.sql import func
-from model.base import Base
-import enum
-
-class UserRole(enum.Enum):
-    user = "user"
-    admin = "admin"
-    courier = "courier"
-    owner = "owner"
-
-    
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+from .base import Base
 
 class User(Base):
     __tablename__ = "users"
-    
-    id = Column(Integer , primary_key=True , nullable=False)
-    username = Column(String(100), nullable=False)
-    password = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
-    first_name = Column(String, nullable=True)
-    last_name = Column(String , nullable=True)
-    is_active = Column(Boolean , default=False)
-    role = Column(Enum(UserRole) , default=UserRole.user)
-    data_joined = Column(DateTime , default=func.now())
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    user_role = Column(String, default="user") 
+    joined_date = Column(DateTime, default=datetime.now())
